@@ -20,6 +20,7 @@ function Task({ colIndex, taskIndex }) {
     const task = col.tasks.find((task, i) => i === taskIndex);
 
     setTheTask(task);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [boards]);
 
   const handleOnDrag = (e) => {

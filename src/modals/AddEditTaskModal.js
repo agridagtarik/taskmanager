@@ -15,6 +15,7 @@ function AddEditTaskModal({
 }) {
   const dispatch = useDispatch();
   const [isFirstLoad, setIsFirstLoad] = useState(true);
+  // eslint-disable-next-line no-unused-vars
   const [isValid, setIsValid] = useState(true);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
@@ -91,6 +92,7 @@ function AddEditTaskModal({
       setStatus(columns[prevColIndex].name);
       setIsFirstLoad(false);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const onSubmit = (type) => {
