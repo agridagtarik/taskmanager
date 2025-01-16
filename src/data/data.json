@@ -1,0 +1,53 @@
+{
+  "boards": [
+    {
+      "name": "Task Management",
+      "isActive": true,
+      "columns": [
+        {
+          "name": "Open",
+          "tasks": []
+        },
+        {
+          "name": "In Progress",
+          "tasks": []
+        },
+        {
+          "name": "In Review",
+          "tasks": []
+        },
+        {
+          "name": "Done",
+          "tasks": []
+        }
+      ],
+      "personel": [
+        {
+          "title": "Ahmet Doğu",
+          "id": 1,
+          "img": "https://images.unsplash.com/photo-1491528323818-fdd1faba62cc?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
+        },
+        {
+          "title": "Ali Batı",
+          "id": 3,
+          "img": "https://www.gravatar.com/avatar/2c7d99fe281ecd3bcd65ab915bac6dd5?s=250"
+        },
+        {
+          "title": "Mehmet Kuzey",
+          "id": 2,
+          "img": "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2.25&w=256&h=256&q=80"
+        },
+        {
+          "title": "Latif Tarık",
+          "id": 4,
+          "img": "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
+        },
+        {
+          "title": "Ayşe Güney",
+          "id": 5,
+          "img": "https://images.unsplash.com/photo-1550525811-e5869dd03032?ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
+        }
+      ]
+    }
+  ]
+}
