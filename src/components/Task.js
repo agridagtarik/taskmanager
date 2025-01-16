@@ -21,6 +21,7 @@ function Task({ colIndex, taskIndex }) {
 
     setTheTask(task);
   }, [boards]);
+
   const handleOnDrag = (e) => {
     e.dataTransfer.setData(
       "text",
