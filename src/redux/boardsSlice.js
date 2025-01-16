@@ -11,6 +11,7 @@ const boardsSlice = createSlice({
         status,
         description,
         personel,
+        storypoint,
         newColIndex,
         startDate,
         endDate,
@@ -19,6 +20,7 @@ const boardsSlice = createSlice({
         title,
         description,
         personel,
+        storypoint,
         status,
         startDate,
         endDate,
@@ -34,6 +36,7 @@ const boardsSlice = createSlice({
         status,
         description,
         personel,
+        storypoint,
         startDate,
         endDate,
         taskIndex,
@@ -48,6 +51,7 @@ const boardsSlice = createSlice({
       task.status = status;
       task.description = description;
       task.personel = personel;
+      task.storypoint = storypoint;
       task.startDate = startDate;
       task.endDate = endDate;
 

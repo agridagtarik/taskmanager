@@ -39,7 +39,13 @@ function Task({ colIndex, taskIndex }) {
         onDragStart={handleOnDrag}
         className=" w-[280px] first:my-5 rounded-lg  bg-white  dark:bg-[#2b2c37] shadow-[#364e7e1a] py-6 px-3 shadow-lg hover:text-[#8E1616] dark:text-white dark:hover:text-[#8E1616] cursor-pointer "
       >
-        <p className=" font-bold tracking-wide ">{theTask?.title}</p>
+        <div className="flex justify-between">
+          <p className="font-bold tracking-wide">{theTask?.title}</p>
+          <span className="inline-flex items-center rounded-xl bg-red-50 px-2 py-1 text-xs font-bold text-red-800 ring-1 ring-inset ring-gray-500/10">
+            {theTask?.storypoint}
+          </span>
+        </div>
+
         <p className=" font-bold text-xs tracking-tighter mt-2 text-gray-500">
           <strong className="underline decoration-black-500">
             Personel assigned:{" "}
