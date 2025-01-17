@@ -209,7 +209,7 @@ function AddEditTaskModal({
               );
               onChangePersonel(objectWithId);
             }}
-            className="select-status flex-grow px-3 py-1 rounded-md text-sm bg-transparent focus:border-0  border-[1px] border-gray-300 focus:outline-[#8E1616] outline-none"
+            className="select-status flex-grow px-3 py-1 rounded-md text-sm bg-transparent focus:border-0  border-[1px] border-gray-300 focus:outline-[#8E1616] outline-none dark:bg-[#2b2c37]"
             placeholder="Choose a Personel"
           >
             <option value="">Choose a Personel</option>
@@ -223,13 +223,13 @@ function AddEditTaskModal({
 
         {/* StoryPoint */}
         <div className="mt-5 flex flex-col space-y-3">
-          <label className="  text-sm dark:text-white text-gray-500">
+          <label className="text-sm dark:text-white text-gray-500">
             StoryPoint
           </label>
           <select
             value={storypoint}
             onChange={onChangeStorypoint}
-            className=" select-status flex-grow px-3 py-1 rounded-md text-sm bg-transparent focus:border-0  border-[1px] border-gray-300 focus:outline-[#8E1616] outline-none"
+            className="select-status flex-grow px-3 py-1 rounded-md text-sm bg-transparent focus:border-0  border-[1px] border-gray-300 focus:outline-[#8E1616] outline-none dark:bg-[#2b2c37]"
           >
             <option value="">Choose a Storypoint</option>
             {points.map((point, index) => (
@@ -248,7 +248,7 @@ function AddEditTaskModal({
           <select
             value={status}
             onChange={onChangeStatus}
-            className=" select-status flex-grow px-3 py-1 rounded-md text-sm bg-transparent focus:border-0  border-[1px] border-gray-300 focus:outline-[#8E1616] outline-none"
+            className=" select-status flex-grow px-3 py-1 rounded-md text-sm bg-transparent focus:border-0  border-[1px] border-gray-300 focus:outline-[#8E1616] outline-none dark:bg-[#2b2c37]"
           >
             <option value="">Choose a Status</option>
             {columns.map((column, index) => (
