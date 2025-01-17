@@ -6,6 +6,7 @@ import lightIcon from "../assets/icon-light-theme.svg";
 import { Switch } from "@headlessui/react";
 import AddEditTaskModal from "../modals/AddEditTaskModal";
 import { useSelector } from "react-redux";
+import "../index.css";
 
 function Header() {
   const [isTaskModalOpen, setIsTaskModalOpen] = useState(false);
@@ -31,15 +32,17 @@ function Header() {
               {board.name}
             </h3>
           </div>
-          <div className="flex -space-x-2 overflow-hidden ms-6">
+          <div className="flex -space-x-1 overflow-hidden ms-6 w-[200px] h-[50px] items-center">
             {board?.personel?.map((pers, index) => (
-              <img
-                className="inline-block size-8 rounded-full ring-3 ring-white"
-                src={pers?.img}
-                alt="#"
-                key={index}
-                title={pers?.title}
-              />
+              <div className="avatar-container" key={index}>
+                <img
+                  className="inline-block size-8 rounded-full ring-3 ring-white"
+                  src={pers?.img}
+                  alt="Profile"
+                  title={pers?.title}
+                />
+                <span className="tooltip">{pers?.title}</span>
+              </div>
             ))}
           </div>
         </div>

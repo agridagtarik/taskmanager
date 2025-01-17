@@ -7,7 +7,7 @@ function Task({ colIndex, taskIndex }) {
   const selectBoards = (state) => state.boards;
   const selectFirstBoard = createSelector(
     [selectBoards],
-    (boards) => boards[0] // Memoize and return the first board
+    (boards) => boards[0]
   );
   const boards = useSelector(selectFirstBoard);
 
@@ -20,7 +20,6 @@ function Task({ colIndex, taskIndex }) {
     const task = col.tasks.find((task, i) => i === taskIndex);
 
     setTheTask(task);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [boards]);
 
   const handleOnDrag = (e) => {

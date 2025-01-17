@@ -15,8 +15,8 @@ function AddEditTaskModal({
 }) {
   const dispatch = useDispatch();
   const [isFirstLoad, setIsFirstLoad] = useState(true);
-  // eslint-disable-next-line no-unused-vars
-  const [isValid, setIsValid] = useState(true);
+
+  const [isValid, setIsValid] = useState(false);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const board = useSelector((state) => state.boards).find(
@@ -47,7 +47,7 @@ function AddEditTaskModal({
 
   const [newColIndex, setNewColIndex] = useState(prevColIndex);
   const [personel, setPersonel] = useState();
-  const isButtonDisabled = !personel && !status && !startDate && !endDate;
+
   const onChangeStatus = (e) => {
     setStatus(e.target.value);
     setNewColIndex(e.target.selectedIndex - 1);
@@ -62,29 +62,27 @@ function AddEditTaskModal({
   };
 
   const validate = () => {
-    setIsValid(false);
-    if (!title?.trim()) {
+    if (
+      title?.trim() &&
+      personel?.title?.trim() &&
+      endDate &&
+      startDate &&
+      status &&
+      description?.length > 0
+    ) {
+      setIsValid(true);
+      onSubmit(type);
+      setIsAddTaskModalOpen(false);
+      type === "edit" && setIsTaskModalOpen(false);
+    } else {
+      setIsValid(false);
       return false;
     }
-    for (let i = 0; i < personel?.length; i++) {
-      if (!personel[i]?.title?.trim()) {
-        return false;
-      }
-    }
-    if (!endDate && !startDate) {
-      return false;
-    }
-    if (!personel && !status) {
-      return false;
-    }
-    setIsValid(true);
-    return true;
   };
   useEffect(() => {
     if (type === "edit" && isFirstLoad) {
       setTitle(task?.title);
       setDescription(task?.description);
-      // setPersonel(task?.personel[0]);
       setPersonel(columns[prevColIndex].tasks[taskIndex].personel);
       setStorypoint(task?.storypoint);
       setStartDate(moment(task?.startDate).toDate());
@@ -92,7 +90,6 @@ function AddEditTaskModal({
       setStatus(columns[prevColIndex].name);
       setIsFirstLoad(false);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const onSubmit = (type) => {
@@ -167,7 +164,7 @@ function AddEditTaskModal({
           />
         </div>
 
-        {/* Datepicker Name */}
+        {/* Date Range */}
 
         <div className="mt-5 flex flex-col space-y-1">
           <label className="text-sm dark:text-white text-gray-500">
@@ -243,7 +240,7 @@ function AddEditTaskModal({
           </select>
         </div>
 
-        {/* current Status  */}
+        {/* Current Status  */}
         <div className="mt-5 flex flex-col space-y-3">
           <label className="text-sm dark:text-white text-gray-500">
             Current Status
@@ -262,17 +259,26 @@ function AddEditTaskModal({
           </select>
           <button
             onClick={() => {
-              const isValid = validate();
-              if (isValid) {
-                onSubmit(type);
-                setIsAddTaskModalOpen(false);
-                type === "edit" && setIsTaskModalOpen(false);
-              }
+              validate();
             }}
             className={`w-full items-center text-white py-2 rounded-full ${
-              isButtonDisabled ? "bg-gray-300" : "bg-[#8E1616]"
+              !title?.trim() ||
+              !personel?.title?.trim() ||
+              !endDate ||
+              !startDate ||
+              !status ||
+              !description?.length > 0
+                ? "bg-gray-300"
+                : "bg-[#8E1616]"
             }`}
-            disabled={isButtonDisabled}
+            disabled={
+              !title?.trim() ||
+              !personel?.title?.trim() ||
+              !endDate ||
+              !startDate ||
+              !status ||
+              !description?.length > 0
+            }
           >
             {type === "edit" ? " Save" : "Create Task"}
           </button>

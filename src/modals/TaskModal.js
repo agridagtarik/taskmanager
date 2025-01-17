@@ -15,7 +15,7 @@ function TaskModal({ taskIndex, colIndex, setIsTaskModalOpen }) {
   const selectBoards = (state) => state.boards;
   const selectFirstBoard = createSelector(
     [selectBoards],
-    (boards) => boards[0] // Memoize and return the first board
+    (boards) => boards[0]
   );
   const board = useSelector(selectFirstBoard);
 
@@ -107,7 +107,7 @@ function TaskModal({ taskIndex, colIndex, setIsTaskModalOpen }) {
           Assigned Personel
         </p>
 
-        {/* personel section */}
+        {/* Personel Section */}
 
         <div className=" mt-3 space-y-2">
           <Personel

@@ -9,7 +9,7 @@ function Column({ colIndex, color }) {
   const selectBoards = (state) => state.boards;
   const selectFirstBoard = createSelector(
     [selectBoards],
-    (boards) => boards[0] // Memoize and return the first board
+    (boards) => boards[0]
   );
   const board = useSelector(selectFirstBoard);
   const col = board?.columns?.find((col, i) => i === colIndex);
