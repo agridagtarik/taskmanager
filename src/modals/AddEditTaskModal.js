@@ -1,100 +1,129 @@
-import React, { useReducer } from "react";
+import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import boardsSlice from "../redux/boardsSlice";
 import DatePicker from "react-datepicker";
 import moment from "moment";
 import "react-datepicker/dist/react-datepicker.css";
 
-let points = [
-  { value: "1" },
-  { value: "2" },
-  { value: "3" },
-  { value: "5" },
-  { value: "8" },
-  { value: "13" },
-];
-
 function AddEditTaskModal({
   type,
   device,
+  setIsTaskModalOpen,
   setIsAddTaskModalOpen,
   taskIndex,
   prevColIndex = 0,
 }) {
   const dispatch = useDispatch();
+  const [isFirstLoad, setIsFirstLoad] = useState(true);
+
+  const [isValid, setIsValid] = useState(false);
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
   const board = useSelector((state) => state.boards).find(
     (board) => board.isActive
   );
-
+  const [startDate, setStartDate] = useState(null);
+  const [endDate, setEndDate] = useState(null);
+  const onChange = (dates) => {
+    const [start, end] = dates;
+    setStartDate(start);
+    setEndDate(end);
+  };
+  let points = [
+    { value: "1" },
+    { value: "2" },
+    { value: "3" },
+    { value: "5" },
+    { value: "8" },
+    { value: "13" },
+  ];
   const columns = board?.columns;
 
   const col = columns?.find((col, index) => index === prevColIndex);
   const task = col
     ? col?.tasks?.find((task, index) => index === taskIndex)
     : [];
+  const [status, setStatus] = useState();
 
-  const initialState = {
-    title: task?.title || "",
-    description: task?.description || "",
-    startDate: task?.startDate || null,
-    endDate: task?.endDate || null,
-    status: task?.status || null,
-    personel: task?.personel || null,
-    storypoint: task?.storypoint || null,
-    newColIndex: prevColIndex,
+  const [newColIndex, setNewColIndex] = useState(prevColIndex);
+  const [personel, setPersonel] = useState();
+
+  const onChangeStatus = (e) => {
+    setStatus(e.target.value);
+    setNewColIndex(e.target.selectedIndex - 1);
   };
 
-  const reducer = (state, action) => {
-    switch (action.type) {
-      case "SET_VALUES":
-        return { ...state, ...action.payload };
-      default:
-        return state;
+  const onChangePersonel = (e) => {
+    setPersonel(e);
+  };
+  const [storypoint, setStorypoint] = useState();
+  const onChangeStorypoint = (e) => {
+    setStorypoint(e.target.value);
+  };
+
+  const validate = () => {
+    if (
+      title?.trim() &&
+      personel?.title?.trim() &&
+      endDate &&
+      startDate &&
+      status &&
+      description?.length > 0
+    ) {
+      setIsValid(true);
+      onSubmit(type);
+      setIsAddTaskModalOpen(false);
+      type === "edit" && setIsTaskModalOpen(false);
+    } else {
+      setIsValid(false);
+      return false;
     }
   };
+  useEffect(() => {
+    if (type === "edit" && isFirstLoad) {
+      setTitle(task?.title);
+      setDescription(task?.description);
+      setPersonel(columns[prevColIndex].tasks[taskIndex].personel);
+      setStorypoint(task?.storypoint);
+      setStartDate(moment(task?.startDate).toDate());
+      setEndDate(moment(task?.endDate).toDate());
+      setStatus(columns[prevColIndex].name);
+      setIsFirstLoad(false);
+    }
+  }, []);
 
-  const [values, setValues] = useReducer(reducer, initialState);
-
-  const onDateChange = (dates) => {
-    const [start, end] = dates;
-    const startDate = start || values.startDate;
-    const endDate = end || values.endDate;
-    setValues({
-      type: "SET_VALUES",
-      payload: {
-        startDate: startDate,
-        endDate: endDate,
-      },
-    });
-  };
-
-  const onSubmit = () => {
+  const onSubmit = (type) => {
     if (type === "add") {
       dispatch(
         boardsSlice.actions.addTask({
-          ...values,
-          startDate: moment(values.startDate).format("YYYY-MM-DD"),
-          endDate: moment(values.endDate).format("YYYY-MM-DD"),
+          title,
+          description,
+          personel: personel,
+          storypoint: storypoint,
+          status: status,
+          startDate: moment(startDate).format("YYYY-MM-DD"),
+          endDate: moment(endDate).format("YYYY-MM-DD"),
+          newColIndex,
         })
       );
     } else {
       dispatch(
         boardsSlice.actions.editTask({
-          ...values,
-          startDate: moment(values.startDate).format("YYYY-MM-DD"),
-          endDate: moment(values.endDate).format("YYYY-MM-DD"),
+          title,
+          description,
+          personel,
+          storypoint,
+          status,
+          startDate: moment(startDate).format("YYYY-MM-DD"),
+          endDate: moment(endDate).format("YYYY-MM-DD"),
           taskIndex: taskIndex,
           prevColIndex: prevColIndex,
-          newColIndex: values.newColIndex,
+          newColIndex: newColIndex,
         })
       );
     }
-    setIsAddTaskModalOpen(false);
   };
 
-  const disabled = !Object.entries(values).every(
-    ([key, val]) => val !== null && val !== undefined && val !== ""
-  );
   return (
     <div
       className={
@@ -126,13 +155,8 @@ function AddEditTaskModal({
             Task Name
           </label>
           <input
-            value={values.title}
-            onChange={(e) =>
-              setValues({
-                type: "SET_VALUES",
-                payload: { title: e.target.value },
-              })
-            }
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
             id="task-name-input"
             type="text"
             className="bg-transparent px-3 py-1 outline-none focus:border-0 rounded-md text-sm  border-[0.5px] border-gray-600 focus:outline-[#8E1616] outline-1  ring-0"
@@ -147,10 +171,10 @@ function AddEditTaskModal({
             Date Range
           </label>
           <DatePicker
-            selected={values.startDate}
-            onChange={onDateChange}
-            startDate={values.startDate}
-            endDate={values.endDate}
+            selected={startDate}
+            onChange={onChange}
+            startDate={startDate}
+            endDate={endDate}
             selectsRange
             placeholderText="Select date..."
             className="bg-transparent px-3 py-1 outline-none focus:border-0 rounded-md text-sm border-[0.5px] border-gray-600 focus:outline-[#8E1616] outline-1 ring-0"
@@ -163,13 +187,8 @@ function AddEditTaskModal({
             Description
           </label>
           <textarea
-            value={values.description}
-            onChange={(e) =>
-              setValues({
-                type: "SET_VALUES",
-                payload: { description: e.target.value },
-              })
-            }
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
             id="task-description-input"
             className="bg-transparent outline-none min-h-[100px] focus:border-0 px-3 py-1 rounded-md text-sm  border-[0.5px] border-gray-600 focus:outline-[#8E1616] outline-[1px] "
             placeholder="Enter a task description"
@@ -183,17 +202,15 @@ function AddEditTaskModal({
           </label>
 
           <select
-            value={values.personel?.id}
+            value={personel?.id}
             onChange={(e) => {
-              const selectedPersonel = board.personel.find(
+              const objectWithId = board.personel.find(
                 (obj) => obj.id === Number(e.target.value)
               );
-              setValues({
-                type: "SET_VALUES",
-                payload: { personel: selectedPersonel },
-              });
+              onChangePersonel(objectWithId);
             }}
             className="select-status flex-grow px-3 py-1 rounded-md text-sm bg-transparent focus:border-0  border-[1px] border-gray-300 focus:outline-[#8E1616] outline-none dark:bg-[#2b2c37]"
+            placeholder="Choose a Personel"
           >
             <option value="">Choose a Personel</option>
             {board.personel.map((column, index) => (
@@ -210,13 +227,8 @@ function AddEditTaskModal({
             StoryPoint
           </label>
           <select
-            value={values.storypoint}
-            onChange={(e) =>
-              setValues({
-                type: "SET_VALUES",
-                payload: { storypoint: e.target.value },
-              })
-            }
+            value={storypoint}
+            onChange={onChangeStorypoint}
             className="select-status flex-grow px-3 py-1 rounded-md text-sm bg-transparent focus:border-0  border-[1px] border-gray-300 focus:outline-[#8E1616] outline-none dark:bg-[#2b2c37]"
           >
             <option value="">Choose a Storypoint</option>
@@ -234,16 +246,8 @@ function AddEditTaskModal({
             Current Status
           </label>
           <select
-            value={values.status}
-            onChange={(e) => {
-              setValues({
-                type: "SET_VALUES",
-                payload: {
-                  status: e.target.value,
-                  newColIndex: e.target.selectedIndex - 1,
-                },
-              });
-            }}
+            value={status}
+            onChange={onChangeStatus}
             className=" select-status flex-grow px-3 py-1 rounded-md text-sm bg-transparent focus:border-0  border-[1px] border-gray-300 focus:outline-[#8E1616] outline-none dark:bg-[#2b2c37]"
           >
             <option value="">Choose a Status</option>
@@ -254,11 +258,27 @@ function AddEditTaskModal({
             ))}
           </select>
           <button
-            onClick={() => onSubmit()}
+            onClick={() => {
+              validate();
+            }}
             className={`w-full items-center text-white py-2 rounded-full ${
-              disabled ? "bg-gray-300" : "bg-[#8E1616]"
+              !title?.trim() ||
+              !personel?.title?.trim() ||
+              !endDate ||
+              !startDate ||
+              !status ||
+              !description?.length > 0
+                ? "bg-gray-300"
+                : "bg-[#8E1616]"
             }`}
-            disabled={disabled}
+            disabled={
+              !title?.trim() ||
+              !personel?.title?.trim() ||
+              !endDate ||
+              !startDate ||
+              !status ||
+              !description?.length > 0
+            }
           >
             {type === "edit" ? " Save" : "Create Task"}
           </button>
